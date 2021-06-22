@@ -188,8 +188,9 @@ def orderlist(message):
 @bot.message_handler(commands="laporan")
 def laporan(message):
     tele_id = int(message.chat.id)
+    print(tele_id)
     if isadmin(tele_id):
-        sql.execute("SELECT list_order.id_order,user.nama,barang.nama,list_order.total,list_order.jmlh,list_order.created_at FROM list_order INNER JOIN user ON list_order.tele_id = user.tele_id INNER JOIN barang ON list_order.barang = barang.id_barang WHERE list_order.tele_id = %s" % (tele_id))
+        sql.execute("SELECT list_order.id_order,user.nama,barang.nama,list_order.total,list_order.jmlh,list_order.created_at FROM list_order INNER JOIN user ON list_order.tele_id = user.tele_id INNER JOIN barang ON list_order.barang = barang.id_barang")
         data = sql.fetchall()
         datauser = data[0]
         id_order = datauser[0]
