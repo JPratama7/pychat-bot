@@ -47,7 +47,7 @@ def idorder(idbarang,idorang):
     
 
 def isadmin(idtelegram):
-    sql.execute("SELECT tele_id FROM admin WHERE tele_id ='%s'" % (telegramid))
+    sql.execute("SELECT tele_id FROM admin WHERE tele_id ='%s'" % (idtelegram))
     admin = sql.fetchall()
     if len(admin) == 1:
         return True
