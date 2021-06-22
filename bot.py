@@ -37,6 +37,24 @@ def checkbarang(idbarang, ):
            return True
     return False
 
+def idorder(idbarang,idorang):
+    now = datetime.datetime.now()
+    seq = now.strftime("%Y%m%d%H%M")
+    stridorang = str(idorang)
+    stridbarang = str(idbarang)
+    idorder = int(seq+stridorang+stridbarang)
+    return idorder
+    
+
+def isadmin(idtelegram):
+    sql.execute("SELECT tele_id FROM admin WHERE tele_id ='%s'" % (telegramid))
+    admin = sql.fetchall()
+    if len(admin) == 1:
+        return True
+    else:
+        return False
+
+
 def log(message,perintah):
     tanggal = datetime.datetime.now()
     tanggal = tanggal.strftime('%d-%B-%Y')
@@ -88,7 +106,7 @@ def order(message):
             hargabarang = sql.fetchall()
             harga = int(hargabarang[0][0])
             jmlh = int(text[2])
-            kode = randint(0,200)
+            kode = idorder(no_id,barang)
             waktu = datetime.datetime.now()
             total = jmlh*harga
             insert = "INSERT INTO list_order(id_order,tele_id,barang,jmlh, total, created_at) VALUES (%s,%s,%s,%s,%s,%s)"
@@ -167,15 +185,11 @@ def orderlist(message):
     bot.send_message(tele_id,pesan)
 
 
-#handler  cancel
-@bot.message_handler(commands=["cancel"])
-def cancel(message):
+@bot.message_handler(commands="laporan")
+def laporan(message):
     tele_id = int(message.chat.id)
-    try:
-        text = str(message.text)
-        split = text.split(" ")
-        id_cancel = split[1]
-        sql.execute("SELECT list_order.id_order,user.nama,barang.nama,list_order.total,list_order.jmlh,list_order.created_at FROM list_order INNER JOIN user ON list_order.tele_id = user.tele_id INNER JOIN barang ON list_order.barang = barang.id_barang WHERE list_order.tele_id = %s AND list_order.id_order = %s" % (tele_id, id_cancel))
+    if isadmin(tele_id):
+        sql.execute("SELECT list_order.id_order,user.nama,barang.nama,list_order.total,list_order.jmlh,list_order.created_at FROM list_order INNER JOIN user ON list_order.tele_id = user.tele_id INNER JOIN barang ON list_order.barang = barang.id_barang WHERE list_order.tele_id = %s" % (tele_id))
         data = sql.fetchall()
         datauser = data[0]
         id_order = datauser[0]
@@ -184,12 +198,11 @@ def cancel(message):
         total = datauser[3]
         jmlah = datauser[4]
         tanggal = datauser[5]
-        pesan = "ID ORDER = %s\nNama User = %s\nNama Barang = %s\nTotal Pembelian = %s\nJumlah Pembelian = %s\nTanggal Pemesanan = %s\n" % (
-        id_order, nama_user, nama_barang, total, jmlah, tanggal)
-        bot.send_message(tele_id, pesan)
-        sql.execute("DELETE FROM list_order WHERE id_order = $s" % (id_cancel))
-    except IndexError:
-        bot.send_message(tele_id, "SALAH FORMAT LAH KAO ato ga LU MAO CANCEL ORDER ORANG LAEN YA")
+        pesan = "ID ORDER = %s\nNama User = %s\nNama Barang = %s\nTotal Pembelian = %s\nJumlah Pembelian = %s\nTanggal Pemesanan = %s\n" % (id_order,nama_user,nama_barang,total,jmlah,tanggal)
+        bot.send_message(tele_id,pesan)
+    else:
+        bot.reply_to(message,"LU SAPA ANJER")
+
 
 
 print("bot is berlari")
