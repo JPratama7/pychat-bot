@@ -1,7 +1,6 @@
 import telebot
 import mysql.connector
 import configparser
-from random import randint
 import  datetime
 
 #configparser
@@ -165,7 +164,8 @@ def help(message):
     bot.reply_to(message,"SELAMAT DATANG KE BOT KAMI\n\n"
                          "Untuk melakukan pendaftaran silakan ketik sesuai format /daftar, nama, alamat\n\n"
                          "Untuk mengecek list kode barang barang silakan ketik /list\n\n"
-                         "untuk melakukan pengorderan silahkan ketik sesuai format /order barang banyak barang\n\n")
+                         "untuk melakukan pengorderan silahkan ketik sesuai format /order barang banyak barang\n\n"
+                         "Untuk mengecek orderlist yang telah dipesan ketik /orderlist")
 
 
 #handler  orderlist
