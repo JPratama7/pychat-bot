@@ -28,7 +28,7 @@ def checkuser(telegramid):
     else:
         return False
 
-def checkbarang(idbarang, ):
+def checkbarang(idbarang):
     barang_id = int(idbarang)
     sql.execute("SELECT id_barang FROM barang WHERE id_barang ='%s'" % (barang_id))
     barang = sql.fetchall()
@@ -119,7 +119,7 @@ def order(message):
             bot.send_message(no_id, "SALAH ANGKA KAO BODAT")
     else:
         bot.send_message(
-            no_id, "DAFTAR DULU BOUSS. KETIK /daftar untuk melakukan pendaftaran"
+            no_id, "DAFTAR DULU BOUSS. KETIK /help, untuk melakukan pendaftaran"
         )
 
 
@@ -143,7 +143,7 @@ def daftar(message):
     log(message,'daftar')
     chat_id = message.chat.id
     if checkuser(chat_id):
-        bot.send_message(chat_id,"BLOK KAN LU DAH DAFTAR")
+        bot.send_message(chat_id,"Data has found")
     else:
         try:
             text = str(message.text)
@@ -154,9 +154,9 @@ def daftar(message):
             val = (chat_id, nama, alamat)
             sql.execute(insert, val)
             db.commit()
-            bot.send_message(chat_id,"OK COCOTE ANDA SUDAH TERDAFTAR")
+            bot.send_message(chat_id,"OK ANDA SUDAH TERDAFTAR")
         except IndexError:
-            bot.send_message(chat_id, "SALAH FORMAT PAOK")
+            bot.send_message(chat_id, "SALAH FORMAT")
 
 #handler help
 @bot.message_handler(commands=["help"])
