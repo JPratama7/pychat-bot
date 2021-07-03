@@ -53,7 +53,6 @@ def isadmin(idtelegram):
     else:
         return False
 
-
 def log(message,perintah):
     tanggal = datetime.datetime.now()
     tanggal = tanggal.strftime('%d-%B-%Y')
@@ -61,8 +60,7 @@ def log(message,perintah):
     nama_akhir = message.chat.last_name
     id_user = message.chat.id
     text_log = f'{tanggal}, {id_user}, {nama_awal}, {nama_akhir}, {perintah}'
-    #text_log = '{}, {}, {} {}, {} \n'.format(tanggal, id_user, nama_awal, nama_akhir, perintah)
-    log_bot = open('logbot.txt','a')
+    log_bot = open('logbot.txt', 'a')
     log_bot.write(text_log)
     log_bot.close()
 
@@ -141,19 +139,19 @@ def product_list(message):
 #Handler Perintah daftar
 @bot.message_handler(commands=["daftar"])
 def daftar(message):
-    log(message,'daftar')
+    log(message, 'daftar')
     chat_id = message.chat.id
     if checkuser(chat_id):
-        bot.send_message(chat_id,"Data has found")
+        bot.send_message(chat_id, "Data has found")
     else:
         try:
             text = str(message.text)
-            identitas = text.split(",")
+            identitas = text.split(" ")
             nama = identitas[1]
-            alamat = identitas[2]
-            insert = "INSERT INTO user (tele_id,nama,alamat) VALUES (%s,%s,%s)"
-            val = (chat_id, nama, alamat)
-            sql.execute(insert, val)
+            alamatarray = identitas[2::]
+            alamat = ' '.join(map(str, alamatarray))
+            insert = f"INSERT INTO user (tele_id,nama,alamat) VALUES ({chat_id},'{nama}','{alamat}')"
+            sql.execute(insert)
             db.commit()
             bot.send_message(chat_id,"OK ANDA SUDAH TERDAFTAR")
         except IndexError:
