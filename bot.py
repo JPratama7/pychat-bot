@@ -60,7 +60,8 @@ def log(message,perintah):
     nama_awal = message.chat.first_name
     nama_akhir = message.chat.last_name
     id_user = message.chat.id
-    text_log = '{}, {}, {} {}, {} \n'.format(tanggal, id_user, nama_awal, nama_akhir, perintah)
+    text_log = f'{tanggal}, {id_user}, {nama_awal}, {nama_akhir}, {perintah}'
+    #text_log = '{}, {}, {} {}, {} \n'.format(tanggal, id_user, nama_awal, nama_akhir, perintah)
     log_bot = open('logbot.txt','a')
     log_bot.write(text_log)
     log_bot.close()
@@ -126,7 +127,7 @@ def order(message):
 #Handler Perintah list
 @bot.message_handler(commands=["list"])
 def product_list(message):
-    log(message,'lisr')
+    log(message,'list')
     chat_id = message.chat.id
     sql.execute("SELECT id_barang, nama, harga FROM barang")
     barang = sql.fetchall()
@@ -138,7 +139,7 @@ def product_list(message):
         bot.send_message(chat_id, pesan)
 
 #Handler Perintah daftar
-@bot.message_handler(commands=["daftar,"])
+@bot.message_handler(commands=["daftar"])
 def daftar(message):
     log(message,'daftar')
     chat_id = message.chat.id
@@ -162,7 +163,7 @@ def daftar(message):
 @bot.message_handler(commands=["help"])
 def help(message):
     bot.reply_to(message,"SELAMAT DATANG KE BOT KAMI\n\n"
-                         "Untuk melakukan pendaftaran silakan ketik sesuai format /daftar, nama, alamat\n\n"
+                         "Untuk melakukan pendaftaran silakan ketik sesuai format /daftar[spasi]nama[spasi]alamat\n\n"
                          "Untuk mengecek list kode barang barang silakan ketik /list\n\n"
                          "untuk melakukan pengorderan silahkan ketik sesuai format /order barang banyak barang\n\n"
                          "Untuk mengecek orderlist yang telah dipesan ketik /orderlist")
@@ -188,18 +189,18 @@ def orderlist(message):
 @bot.message_handler(commands="laporan")
 def laporan(message):
     tele_id = int(message.chat.id)
-    print(tele_id)
     if isadmin(tele_id):
-        sql.execute("SELECT list_order.id_order,user.nama,barang.nama,list_order.total,list_order.jmlh,list_order.created_at FROM list_order INNER JOIN user ON list_order.tele_id = user.tele_id INNER JOIN barang ON list_order.barang = barang.id_barang")
+        sql.execute("SELECT list_order.id_order, user.nama, barang.nama, user.alamat, list_order.total, list_order.jmlh, list_order.created_at FROM list_order INNER JOIN user ON list_order.tele_id = user.tele_id INNER JOIN barang ON list_order.barang = barang.id_barang")
         data = sql.fetchall()
         datauser = data[0]
         id_order = datauser[0]
         nama_user = datauser[1]
         nama_barang = datauser[2]
-        total = datauser[3]
-        jmlah = datauser[4]
-        tanggal = datauser[5]
-        pesan = "ID ORDER = %s\nNama User = %s\nNama Barang = %s\nTotal Pembelian = %s\nJumlah Pembelian = %s\nTanggal Pemesanan = %s\n" % (id_order,nama_user,nama_barang,total,jmlah,tanggal)
+        alamat = datauser[3]
+        total = datauser[4]
+        jmlah = datauser[5]
+        tanggal = datauser[6]
+        pesan = "ID ORDER = %s\nNama User = %s\nAlamat = %s\nNama Barang = %s\nTotal Pembelian = %s\nJumlah Pembelian = %s\nTanggal Pemesanan = %s\n" % (id_order,nama_user,alamat,nama_barang,total,jmlah,tanggal)
         bot.send_message(tele_id,pesan)
     else:
         bot.reply_to(message,"LU SAPA ANJER")
