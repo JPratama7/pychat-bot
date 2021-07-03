@@ -7,4 +7,6 @@ share/*
 setting.ini
 logbot.text
 pyvenv.cfg
-lib64
+lib64/
+test.py
+pyvenv.cfg
