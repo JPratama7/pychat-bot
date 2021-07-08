@@ -10,3 +10,5 @@ pyvenv.cfg
 lib64/
 test.py
 pyvenv.cfg
+logbot.text
+setting.ini
