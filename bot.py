@@ -181,7 +181,6 @@ def orderlist(message):
         sql.execute("SELECT list_order.id_order,user.nama,barang.nama,list_order.total,list_order.jmlh,list_order.created_at FROM list_order INNER JOIN user ON list_order.tele_id = user.tele_id INNER JOIN barang ON list_order.barang = barang.id_barang WHERE list_order.tele_id = %s" % (tele_id))
         data = sql.fetchall()
         for datauser in data:
-
             id_order = datauser[0]
             nama_user = datauser[1]
             nama_barang = datauser[2]
