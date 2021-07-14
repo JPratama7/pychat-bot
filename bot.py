@@ -32,9 +32,9 @@ def checkbarang(idbarang): # mendefinisikan fungsi checkbarang
     barang_id = int(idbarang) # deklarasi variabel
     sql.execute(f"SELECT id_barang FROM barang WHERE id_barang ='{barang_id}'") # eksekusi query untuk mengecek barang
     barang = sql.fetchall() # mengambil data  dari hasil eksekusi query
-    if len(barang) == 1: # if jika data sama dengan 1
+    if len(barang) == 1: # if jika banyak data sama dengan 1
            return True # mengembalikan nilai true
-    return False # else jika data tidak sama dengan 1
+    return False # else jika banyak data tidak sama dengan 1
 
 def idorder(idbarang,idorang): # mendefinisikan fungsi idorder
     now = datetime.datetime.now() #mengambil fungsi datetime
