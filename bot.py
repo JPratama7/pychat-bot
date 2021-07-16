@@ -32,9 +32,9 @@ def checkbarang(idbarang): # mendefinisikan fungsi checkbarang
     barang_id = int(idbarang) # deklarasi variabel
     sql.execute(f"SELECT id_barang FROM barang WHERE id_barang ='{barang_id}'") # eksekusi query untuk mengecek barang
     barang = sql.fetchall() # mengambil data  dari hasil eksekusi query
-    if len(barang) == 1: # if jika banyak data sama dengan 1
+    if len(barang) == 1: # if jika data sama dengan 1
            return True # mengembalikan nilai true
-    return False # else jika banyak data tidak sama dengan 1
+    return False # else jika data tidak sama dengan 1
 
 def idorder(idbarang,idorang): # mendefinisikan fungsi idorder
     now = datetime.datetime.now() #mengambil fungsi datetime
@@ -127,7 +127,7 @@ def daftar(message): # mendeklarasikan fungsi daftar
     bot.send_message(chat_id,"format daftar :\n\n"
                             "/daftar[spasi]nama[spasi]alamat") # mengirimkan text ke user
     if checkuser(chat_id): # if jika checkuser true
-        bot.send_message(chat_id, "Data has found") # mengirim pesan ke user
+        bot.send_message(chat_id, "Data Telah Ditemukan, Silahkan melakukan order") # mengirim pesan ke user
     else: # else ketika checkuser false
         try: # digunakan untuk mengatasi eror yang tidak terduga
             text = str(message.text) # mendeklarasikan variabel text
@@ -161,19 +161,20 @@ def orderlist(message): # mendefinisikan fungsi orderlist
     log(message, message.text) # memanggil fungsi log
     tele_id = int(message.chat.id) # mendeklarasikan variabel
     try: # digunakan untuk mengatasi eror yang tidak terduga
-        sql.execute("SELECT list_order.id_order,user.nama,barang.nama,list_order.total,list_order.jmlh,list_order.created_at FROM list_order INNER JOIN user ON list_order.tele_id = user.tele_id INNER JOIN barang ON list_order.barang = barang.id_barang WHERE list_order.tele_id = %s" % (tele_id))
+        sql.execute(f"SELECT list_order.id_order,user.nama,barang.nama,list_order.total,list_order.jmlh,list_order.created_at FROM list_order INNER JOIN user ON list_order.tele_id = user.tele_id INNER JOIN barang ON list_order.barang = barang.id_barang WHERE list_order.tele_id = {tele_id}")
         data = sql.fetchall() #mengambil data dari query
-        for datauser in data: # melakukan loop pada setiap datauser di data
-            id_order = datauser[0] # mendeklarasikan variabel
-            nama_user = datauser[1] # mendeklarasikan variabel
-            nama_barang = datauser[2] # mendeklarasikan variabel
-            total = datauser[3] # mendeklarasikan variabel
-            jmlah = datauser[4] # mendeklarasikan variabel
-            tanggal = datauser[5] # mendeklarasikan variabel
-            pesan = "ID ORDER = %s\nNama User = %s\nNama Barang = %s\nTotal Pembelian = %s\nJumlah Pembelian = %s\nTanggal Pemesanan = %s\n" % (id_order,nama_user,nama_barang,total,jmlah,tanggal)
-            bot.send_message(tele_id,pesan) # mengirim text ke user
-    except IndexError : # menangkap eror index
-        bot.send_message(tele_id,"Anda Belum Melakukan Pesanan") # mengirim pesan ke user
+        if len(data) > 0: # mengecek jika ada data
+            for datauser in data: # melakukan loop pada setiap datauser di data
+                id_order = datauser[0] # mendeklarasikan variabel
+                nama_user = datauser[1] # mendeklarasikan variabel
+                nama_barang = datauser[2] # mendeklarasikan variabel
+                total = datauser[3] # mendeklarasikan variabel
+                jmlah = datauser[4] # mendeklarasikan variabel
+                tanggal = datauser[5] # mendeklarasikan variabel
+                pesan = "ID ORDER = %s\nNama User = %s\nNama Barang = %s\nTotal Pembelian = %s\nJumlah Pembelian = %s\nTanggal Pemesanan = %s\n" % (id_order,nama_user,nama_barang,total,jmlah,tanggal)
+                bot.send_message(tele_id,pesan) # mengirim text ke user
+        else: # jika data tidak ada maka akan mengirim pesan
+            bot.send_message(tele_id,"Anda Belum Melakukan Pesanan")
     except Exception : # menangkap eroor yang tidak diketahui
         bot.send_message(tele_id,"Saya tidak memahami apa yang anda katakan") # mengirim pesan ke user
 
